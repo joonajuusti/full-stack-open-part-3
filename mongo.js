@@ -16,13 +16,13 @@ const Person = mongoose.model('Person', {
 if (process.argv.length === 2) {
   console.log('puhelinluettelo:')
   Person
-  .find({}, {__v: 0})
-  .then(result => {
-    result.forEach(person => {
-      console.log(person)
-    })
-    mongoose.connection.close()
-  }).catch(error => console.log(error.message))
+    .find({}, { __v: 0 })
+    .then(result => {
+      result.forEach(person => {
+        console.log(person)
+      })
+      mongoose.connection.close()
+    }).catch(error => console.log(error.message))
 }
 
 else if (process.argv.length === 4) {
@@ -34,7 +34,7 @@ else if (process.argv.length === 4) {
 
   person
     .save()
-    .then(result => {
+    .then(() => {
       console.log(`lisätään henkilö ${process.argv[2]} numero ${process.argv[3]} luetteloon`)
       mongoose.connection.close()
     })

@@ -4,7 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
 
-morgan.token('reqData', (req, res) => {
+morgan.token('reqData', (req) => {
   return JSON.stringify(req.body)
 })
 
@@ -17,7 +17,7 @@ app.use(express.static('build'))
 
 app.get('/api/persons', (req, res) => {
   Person
-    .find({}, {__v: 0})
+    .find({}, { __v: 0 })
     .then(persons => {
       res.json(persons.map(Person.format))
     })
@@ -28,10 +28,10 @@ app.post('/api/persons', (req, res) => {
   const body = req.body
 
   Person
-    .find({name: body.name})
+    .find({ name: body.name })
     .then(result => {
       if (result.length > 0) {
-        res.status(400).json({ error: 'name already exists in database'})
+        res.status(400).json({ error: 'name already exists in database' })
       } else {
         const person = new Person({
           name: body.name,
@@ -70,11 +70,11 @@ app.get('/api/persons/:id', (req, res) => {
 app.delete('/api/persons/:id', (req, res) => {
   Person
     .findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
-    .catch(error => {
-      response.status(400).send({ error: 'malformatted id' })
+    .catch(() => {
+      res.status(400).send({ error: 'malformatted id' })
     })
 })
 
@@ -90,14 +90,14 @@ app.put('/api/persons/:id', (req, res) => {
     .findByIdAndUpdate(req.params.id, person, { new: true } )
     .then(Person.format)
     .then(savedAndFormattedPerson => res.json(savedAndFormattedPerson))
-    .catch(error => {
+    .catch(() => {
       res.status(400).send({ error: 'malformatted id' })
     })
 })
 
 app.get('/info', (req, res) => {
   Person
-    .find({}, {__v: 0})
+    .find({}, { __v: 0 })
     .then(persons => {
       const personAmountString = `puhelinluettelossa on ${persons.length} henkilön tiedot`
       res.send('<p>' + personAmountString + '</p>' + '<p>' + new Date() + '</p>')
